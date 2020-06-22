@@ -42,7 +42,7 @@ sudo apt-get install apt-transport-https -y
 echo 'deb https://dl.bintray.com/openhab/apt-repo2 stable main' | sudo tee /etc/apt/sources.list.d/openhab2.list
 
 # install
-sudo apt-get install openhab2 openhab2-addons -yy
+sudo apt-get update && sudo apt-get install openhab2 openhab2-addons -yy
 
 ## Start OpenHAB services
 sudo systemctl start openhab2.service
@@ -59,14 +59,16 @@ sudo adduser openhab tty
 sudo apt install mosquitto mosquitto-clients -yy
 
 sudo cp /etc/mosquitto/mosquitto.conf /etc/mosquitto/mosquitto.conf.bak
-echo "allow_anonymous fasle" >> /etc/mosquitto/mosquitto.conf
-echo "password_file /etc/mosquitto/pwfile" >> /etc/mosquitto/mosquitto.conf
-echo "listener 1883" >> /etc/mosquitto/mosquitto.conf
+sudo echo "allow_anonymous fasle" >> /etc/mosquitto/mosquitto.conf
+sudo echo "password_file /etc/mosquitto/pwfile" >> /etc/mosquitto/mosquitto.conf
+sudo echo "listener 1883" >> /etc/mosquitto/mosquitto.conf
 #sudo nano /etc/mosquitto/mosquitto.conf 
 
+# Creat mqtt password for user "pi"
 sudo mosquitto_passwd -c /etc/mosquitto/pwfile pi
 
-start mosquitto
-sudo mosquitto -v -c /etc/mosquitto/mosquitto.conf
-
-openhabian-config
+# Test mqtt
+# Subscrib to "test" topic
+mosquitto_sub -d -u pi -P $PASSWD -t test
+# Publish "test" topic
+mosquitto_pub -d -u pi -P $PASSWD -t test -m "Hello, World!"
