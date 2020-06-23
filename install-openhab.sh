@@ -58,14 +58,19 @@ sudo adduser openhab tty
 #apt-cache search mosquitto
 sudo apt install mosquitto mosquitto-clients -yy
 
+# Edit mosquitto.conf
 sudo cp /etc/mosquitto/mosquitto.conf /etc/mosquitto/mosquitto.conf.bak
 sudo echo "allow_anonymous fasle" >> /etc/mosquitto/mosquitto.conf
 sudo echo "password_file /etc/mosquitto/pwfile" >> /etc/mosquitto/mosquitto.conf
 sudo echo "listener 1883" >> /etc/mosquitto/mosquitto.conf
 #sudo nano /etc/mosquitto/mosquitto.conf 
 
-# Creat mqtt password for user "pi"
+
+# Create mqtt password for user "pi"
 sudo mosquitto_passwd -c /etc/mosquitto/pwfile pi
+
+# Run mqtt with mosquitto.conf
+sudo mosquitto -v -c /etc/mosquitto/mosquitto.conf
 
 # Test mqtt
 # Subscrib to "test" topic
